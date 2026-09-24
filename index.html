@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="sv"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Samtal">
+<meta name="theme-color" content="#7a4dff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Samtal på svenska</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f6ff;--card:#fff;--tx:#231f33;--mu:#6b6580;--ac:#7a4dff;--ln:#e4dff5;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15121f;--card:#1f1b2e;--tx:#eeeaf9;--mu:#a9a3c0;--ln:#352f4d}}
+:root[data-theme="dark"]{--bg:#15121f;--card:#1f1b2e;--tx:#eeeaf9;--mu:#a9a3c0;--ln:#352f4d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.5 Nunito,system-ui,sans-serif}
+body[data-age=kid]{--ac:#d6408a}body[data-age=adult]{--ac:#0c8a7e}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:28px;font-weight:800;margin:4px 0 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:2px solid var(--ln);background:var(--card);color:var(--tx);border-radius:999px;padding:8px 16px;min-height:44px}
+button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:var(--on);font-weight:700}
+.seg button{flex:1}
+.topics{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.topics button{white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:16px 18px;margin-bottom:14px}
+h2{font-size:20px;margin:0 0 4px}h3{font-size:16px;margin:16px 0 8px;color:var(--ac)}
+ul{list-style:none;padding:0;margin:0}li{padding:6px 0;border-bottom:1px solid var(--ln)}li:last-child{border:0}
+small{display:block;color:var(--mu);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:6px 12px}
+.chips small{font-size:13px}
+.b{max-width:88%;padding:10px 14px;border-radius:18px;margin:8px 0}
+.b.a{background:var(--ac);color:var(--on);border-bottom-left-radius:4px}
+.b.a small{color:var(--on);opacity:.85}
+.b.z{background:var(--bg);border:1px solid var(--ln);margin-left:auto;border-bottom-right-radius:4px}
+.b b{font-size:13px;display:block;opacity:.8}
+#rq{border:2px dashed var(--ac)}
+.tg{display:inline-block;font-size:12px;font-weight:700;color:var(--ac);border:1px solid var(--ac);border-radius:999px;padding:0 8px;margin-right:8px}li b{color:var(--ac)}
+.vt{width:100%;border-collapse:collapse}.vt th{text-align:left;font-size:13px;color:var(--mu);padding:4px 6px}.vt td{padding:6px;border-top:1px solid var(--ln);vertical-align:top}.vt td:first-child{font-weight:700}
+select{font:inherit;flex:1;min-width:0;min-height:44px;border:2px solid var(--ln);border-radius:12px;background:var(--card);color:var(--tx);padding:8px 12px}
+select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+</style></head>
+<body data-age="teen"><main>
+<h1>Samtal på svenska</h1>
+<div class="row seg" id="ages"></div>
+<div class="row"><button id="rb">Slumpa en fråga</button><button id="en" aria-pressed="true">English</button></div>
+<div class="card" id="rq" hidden></div>
+<div class="row"><select id="tp" aria-label="Ämne"></select><button id="rt">Slumpa ämne</button></div>
+<div id="out"></div>
+</main>
+<script>
+const D={
+kid:[
+{t:"Söta djur",e:"Cute animals",
+p:["Vilket djur gillar du mest?|Which animal do you like most?","Jag älskar röda pandor!|I love red pandas!","Den är så söt!|It is so cute!","Jag önskar mig en kanin.|I wish for a rabbit.","Jag vill klappa den.|I want to pet it."],
+v:["en röd panda|a red panda","en kanin|a rabbit","en kattunge|a kitten","en hund|a dog","päls|fur","en svans|a tail","mjuk|soft","söt|cute","ett djur|an animal","ett husdjur|a pet","en valp|a puppy","ett öra|an ear","en tass|a paw","en nos|a nose","morrhår|whiskers","att klappa|to pet","att gosa|to cuddle","att mata|to feed","en bur|a cage"],
+q:["Vilket djur vill du ha som husdjur? Varför?|Which animal do you want as a pet? Why?","Vad skulle du döpa en kattunge till?|What would you name a kitten?","Vilket djur är sötast på YouTube?|Which animal is cutest on YouTube?","Vilket djur är starkast, tror du?|Which animal do you think is strongest?"],
+w:["Får jag *klappa* hunden?|May I pet the dog?|i","Igår *såg* jag en röd panda.|Yesterday I saw a red panda.|p","Jag har *matat* kaninen.|I have fed the rabbit.|s"]},
+{t:"Minecraft och Roblox",e:"Minecraft and Roblox",
+p:["Vad bygger du?|What are you building?","Jag bygger ett hus av trä.|I am building a wooden house.","Ska vi spela tillsammans?|Shall we play together?","Se upp, det är en creeper!|Watch out, it is a creeper!","Jag har hittat diamanter!|I found diamonds!"],
+v:["en värld|a world","ett block|a block","en gruva|a mine","en hacka|a pickaxe","bygga|to build","gräva|to dig","en avatar|an avatar","en kompis|a friend","en diamant|a diamond","ett träd|a tree","en grotta|a cave","en gård|a farm","ett monster|a monster","en byggnad|a building","att överleva|to survive","att samla|to collect","en server|a server","en skatt|a treasure","ett lag|a team"],
+q:["Vad är det coolaste du har byggt?|What is the coolest thing you have built?","Överlevnadsläge eller kreativt läge? Varför?|Survival or creative mode? Why?","Vilket Roblox-spel gillar du bäst?|Which Roblox game do you like best?","Vem vill du spela med? Varför?|Who do you want to play with? Why?"],
+w:["Jag vill *bygga* ett stort slott.|I want to build a big castle.|i","Igår *grävde* jag en lång tunnel.|Yesterday I dug a long tunnel.|p","Vi har *spelat* hela dagen.|We have played all day.|s"]},
+{t:"YouTube och serier",e:"YouTube and shows",
+p:["Vem tittar du på?|Who do you watch?","Min favoritserie heter The Amazing Digital Circus.|My favorite show is The Amazing Digital Circus.","Den är rolig och lite läskig.|It is funny and a bit scary.","Vem är din favoritkaraktär?|Who is your favorite character?","Jag skrattar hela tiden.|I laugh all the time."],
+v:["en serie|a show","ett avsnitt|an episode","en karaktär|a character","en kanal|a channel","rolig|funny","läskig|scary","titta på|to watch","favorit|favorite","en video|a video","en youtuber|a YouTuber","ett program|a program","en film|a movie","musik|music","en säsong|a season","att skratta|to laugh","spännande|exciting","bäst|best","en tecknad film|a cartoon"],
+q:["Vilken serie tycker du att jag ska titta på?|Which show do you think I should watch?","Vem är roligast i serien? Varför?|Who is funniest in the show? Why?","Vad hände i det senaste avsnittet?|What happened in the latest episode?","Vilken karaktär vill du vara? Varför?|Which character do you want to be? Why?"],
+w:["Jag gillar att *titta* på tecknade serier.|I like to watch cartoons.|i","Vi *skrattade* så mycket igår.|We laughed so much yesterday.|p","Jag har *tyckt* om den serien länge.|I have liked that show for a long time.|s"]},
+{t:"Pyssel och konst",e:"Crafts and art",
+p:["Vad pysslar du med?|What crafts do you do?","Jag syr ett mjukisdjur.|I am sewing a stuffed animal.","Jag samlar på klistermärken.|I collect stickers.","Kan jag få byta med dig?|Can I trade with you?","Jag klipper och klistrar.|I cut and paste."],
+v:["att sy|to sew","en nål|a needle","tyg|fabric","en tråd|a thread","ett klistermärke|a sticker","att rita|to draw","en penna|a pencil","en färg|a color","en sax|scissors","lim|glue","papper|paper","en knapp|a button","garn|yarn","en symaskin|a sewing machine","en tygbit|a piece of fabric","en målarbok|a coloring book","att klippa|to cut","att klistra|to glue","att måla|to paint","glitter|glitter"],
+q:["Vad har du gjort som du är stolt över?|What have you made that you are proud of?","Vilket är ditt finaste klistermärke?|Which is your prettiest sticker?","Vad vill du sy eller rita nästa gång?|What do you want to sew or draw next time?","Vad skulle du göra av ett gammalt tyg?|What would you make from an old piece of fabric?"],
+w:["Jag vill *sy* ett mjukisdjur.|I want to sew a stuffed animal.|i","Igår *klippte* jag ut en stjärna.|Yesterday I cut out a star.|p","Jag har *målat* en regnbåge.|I have painted a rainbow.|s"]},
+{t:"Familjen och hemma",e:"Family and home",
+p:["Jag har en storasyster.|I have an older sister.","Vi bor i en lägenhet.|We live in an apartment.","Min favoritplats hemma är soffan.|My favorite place at home is the sofa.","Vi äter middag klockan sex.|We eat dinner at six."],
+v:["en mamma|a mom","en pappa|a dad","en syster|a sister","en bror|a brother","ett rum|a room","en säng|a bed","ett kök|a kitchen","en soffa|a sofa","en morfar|a maternal grandfather","en mormor|a maternal grandmother","en farmor|a paternal grandmother","en farfar|a paternal grandfather","en kusin|a cousin","en trädgård|a garden","en dörr|a door","ett fönster|a window","ett badrum|a bathroom","en stol|a chair","ett bord|a table"],
+q:["Vem bor i ditt hem?|Who lives in your home?","Vad gör din familj tillsammans på kvällen?|What does your family do together in the evening?","Vad är ditt favoritrum hemma? Varför?|What is your favorite room at home? Why?","Vem i familjen är roligast? Varför?|Who in the family is funniest? Why?"],
+w:["Vi vill *bo* nära mormor.|We want to live near grandma.|i","Vi *åt* middag klockan sex.|We ate dinner at six.|p","Lillebror har *sovit* hela eftermiddagen.|Little brother has slept all afternoon.|s"]},
+{t:"Mat och fika",e:"Food and snacks",
+p:["Jag är hungrig!|I am hungry!","Det smakar jättegott.|It tastes really good.","Kan jag få lite mer?|Can I have a little more?","Vad är det till middag?|What is for dinner?"],
+v:["en frukost|a breakfast","en lunch|a lunch","en middag|a dinner","en kanelbulle|a cinnamon bun","en glass|an ice cream","en frukt|a fruit","mjölk|milk","en smörgås|a sandwich","en apelsin|an orange","ett äpple|an apple","en banan|a banana","ett ägg|an egg","ost|cheese","bröd|bread","pasta|pasta","en pizza|a pizza","en kaka|a cookie","godis|candy","en dryck|a drink"],
+q:["Vad är din favoritmat?|What is your favorite food?","Vad äter du till frukost?|What do you eat for breakfast?","Vad skulle du baka om du fick välja?|What would you bake if you could choose?","Vilken mat tycker du inte om?|Which food do you not like?"],
+w:["Jag vill *dricka* mjölk.|I want to drink milk.|i","Igår *bakade* vi kanelbullar.|Yesterday we baked cinnamon buns.|p","Det har *smakat* jättegott.|It has tasted really good.|s"]},
+{t:"Väder och årstider",e:"Weather and seasons",
+p:["Vad är det för väder idag?|What is the weather like today?","Det regnar och det är kallt.|It is raining and it is cold.","Jag gillar sommaren bäst.|I like summer best.","Det blåser mycket idag.|It is very windy today."],
+v:["en sol|a sun","ett moln|a cloud","regn|rain","snö|snow","en vinter|a winter","en sommar|a summer","varm|warm","kall|cold","en vind|a wind","en storm|a storm","åska|thunder","en regnbåge|a rainbow","en pöl|a puddle","is|ice","en vår|a spring","en höst|an autumn","en mössa|a hat","ett paraply|an umbrella","grader|degrees","en snögubbe|a snowman"],
+q:["Vilken årstid gillar du bäst? Varför?|Which season do you like best? Why?","Vad gör du när det snöar?|What do you do when it snows?","Vad tar du på dig när det regnar?|What do you put on when it rains?","Vad gör du när solen skiner?|What do you do when the sun is shining?"],
+w:["Det kommer att *regna* imorgon.|It is going to rain tomorrow.|i","Igår *snöade* det hela dagen.|Yesterday it snowed all day.|p","Solen har *skinit* hela veckan.|The sun has shone all week.|s"]},
+{t:"Skolan och rasten",e:"School and recess",
+p:["Vad har vi första lektionen?|What do we have first lesson?","Jag leker med mina kompisar på rasten.|I play with my friends at recess.","Min favoritlärare är snäll.|My favorite teacher is kind.","Får jag gå på toaletten?|May I go to the toilet?"],
+v:["en skola|a school","en lärare|a teacher","en klass|a class","en rast|a recess","en penna|a pencil","en bok|a book","ett ämne|a subject","en skolgård|a schoolyard","en elev|a pupil","en klasskompis|a classmate","en tavla|a board","en gympalektion|a gym class","en matsal|a lunchroom","en skolväska|a school bag","en läxa|homework","en linjal|a ruler","ett suddgummi|an eraser","att räkna|to count, calculate","att läsa|to read","att skriva|to write"],
+q:["Vad är ditt favoritämne? Varför?|What is your favorite subject? Why?","Vad leker ni på rasten?|What do you play at recess?","Vad vill du lära dig mer om?|What do you want to learn more about?","Vad äter ni till lunch i skolan?|What do you eat for lunch at school?"],
+w:["Jag tycker om att *läsa* böcker.|I like reading books.|i","Vi *skrev* en berättelse i skolan.|We wrote a story at school.|p","Vi har *lekt* hela rasten.|We have played the whole recess.|s"]}],
+teen:[
+{t:"Rollspel (D&D)",e:"Tabletop RPGs",
+p:["Vilken klass spelar du?|Which class do you play?","Jag spelar en alv som är trollkarl.|I play an elf who is a wizard.","Jag försöker övertyga vakten.|I try to convince the guard.","Slå en tärning!|Roll a die!"],
+v:["ett rollspel|a role-playing game","en spelledare|a game master","en karaktär|a character","en tärning|a die","ett äventyr|an adventure","ett monster|a monster","en trollkarl|a wizard","en alv|an elf","en krigare|a warrior","en tjuv|a thief","en dvärg|a dwarf","en präst|a cleric, priest","en besvärjelse|a spell","ett svärd|a sword","en rustning|armor","ett karaktärsblad|a character sheet","ett tärningsslag|a dice roll","en kampanj|a campaign","att lyckas|to succeed","att misslyckas|to fail"],
+q:["Om du fick skapa en helt egen karaktär, vem skulle det vara?|If you could create your own character, who would it be?","Vilket är det bästa äventyret du har spelat?|What is the best adventure you have played?","Skulle du hellre vara spelledare eller spelare? Varför?|Would you rather be game master or player? Why?"],
+w:["Du måste *slå* en tärning.|You have to roll a die.|i","Jag *lyckades* övertyga vakten.|I succeeded in convincing the guard.|p","Vi har *försökt* besegra draken hela kvällen.|We have tried to defeat the dragon all evening.|s"]},
+{t:"Dataspel och indiespel",e:"Video games and indie games",
+p:["Vilket spel har du spelat mest?|Which game have you played most?","Berättelsen är det bästa med spelet.|The story is the best part of the game.","Grafiken är superfin.|The graphics are gorgeous.","Jag föredrar små indiespel.|I prefer small indie games."],
+v:["ett dataspel|a video game","en bana|a level","en spelvärld|a game world","en uppdatering|an update","grafik|graphics","svår|hard","en berättelse|a story","att spela|to play","en spelare|a player","en handkontroll|a controller","en skärm|a screen","en utmaning|a challenge","att vinna|to win","att förlora|to lose","en figur|a character, figure","ett pussel|a puzzle","ett uppdrag|a quest","ett spelläge|a game mode"],
+q:["Vilket spel har den bästa världen? Varför?|Which game has the best world? Why?","Vad gör ett indiespel speciellt?|What makes an indie game special?","Om du gjorde ett eget spel, vad skulle det handla om?|If you made your own game, what would it be about?"],
+w:["Jag vill *spela* det nya spelet.|I want to play the new game.|i","Vi *vann* efter tre timmar.|We won after three hours.|p","Jag har *förlorat* alla mina liv.|I have lost all my lives.|s"]},
+{t:"Konst, anime och mässor",e:"Art, anime and conventions",
+p:["Vilken stil ritar du i?|What style do you draw in?","Jag ska klä ut mig till en gotisk karaktär.|I am going to dress up as a gothic character.","Vilken anime rekommenderar du?|Which anime do you recommend?","Jag såg den med svenska undertexter.|I watched it with Swedish subtitles."],
+v:["en teckning|a drawing","en stil|a style","en mässa|a convention","att klä ut sig|to dress up, cosplay","en serietidning|a comic","undertexter|subtitles","mörk|dark","gotisk|gothic","en konstnär|an artist","en skiss|a sketch","en kostym|a costume","en peruk|a wig","en målning|a painting","en pensel|a brush","bläck|ink","en tecknad serie|a cartoon","en samlare|a collector","att inspirera|to inspire"],
+q:["Vilken konstnär inspirerar dig mest?|Which artist inspires you most?","Vad skulle du göra på en serie- och fantasymässa?|What would you do at a comic and fantasy convention?","Vilken anime borde alla se? Varför?|Which anime should everyone watch? Why?"],
+w:["Jag älskar att *rita* karaktärer.|I love to draw characters.|i","Jag *klädde* ut mig till vampyr på mässan.|I dressed up as a vampire at the convention.|p","Jag har *rekommenderat* den serien till alla.|I have recommended that series to everyone.|s"]},
+{t:"Miljön och samhället",e:"Environment and society",
+p:["Jag är orolig för klimatet.|I am worried about the climate.","Vad tycker du om det här?|What do you think about this?","Jag håller med dig.|I agree with you.","Jag ser det på ett annat sätt.|I see it differently."],
+v:["klimatet|the climate","miljön|the environment","att återvinna|to recycle","en åsikt|an opinion","rättvis|fair","en lag|a law","att rösta|to vote","att hålla med|to agree","ett utsläpp|an emission","förnybar energi|renewable energy","plast|plastic","en skog|a forest","att skydda|to protect","en regering|a government","ett val|an election","en demonstration|a demonstration","hållbar|sustainable","orättvis|unfair"],
+q:["Vad är det viktigaste miljöproblemet just nu?|What is the most important environmental problem right now?","Vad kan en tonåring göra för miljön?|What can a teenager do for the environment?","Ska man få rösta när man är 16? Varför?|Should people be allowed to vote at 16? Why?"],
+w:["Vi ska *återvinna* mer plast.|We should recycle more plastic.|i","Kommunen *skyddade* skogen förra året.|The municipality protected the forest last year.|p","Har du någonsin *röstat* i ett val?|Have you ever voted in an election?|s"]},
+{t:"Indiefilm och konst på YouTube",e:"Indie film and art on YouTube",
+p:["Jag har hittat en fin kortfilm.|I found a lovely short film.","Den är gjord av en person ensam.|It was made by one person alone.","Animationen är helt unik.|The animation is completely unique."],
+v:["en kortfilm|a short film","en animation|an animation","en regissör|a director","en skapare|a creator","ett manus|a script","originell|original","en prenumerant|a subscriber","att dela|to share","en skådespelare|an actor","en scen|a scene","en kamera|a camera","att filma|to film","att klippa|to edit","filmmusik|film music","en budget|a budget","en tolkning|an interpretation","en stämning|a mood","en dokumentär|a documentary"],
+q:["Vilken skapare borde jag följa? Varför?|Which creator should I follow? Why?","Vad gör en kortfilm bra?|What makes a short film good?","Skulle du vilja göra en egen film? Om vad?|Would you like to make your own film? About what?"],
+w:["Jag vill *filma* en egen kortfilm.|I want to film my own short film.|i","Igår *såg* jag en fantastisk animation.|Yesterday I saw an amazing animation.|p","Jag har *delat* videon med mina vänner.|I have shared the video with my friends.|s"]},
+{t:"Indiemusik",e:"Indie music",
+p:["Jag lyssnar mest på indiemusik.|I mostly listen to indie music.","Texterna betyder mycket för mig.|The lyrics mean a lot to me.","Hon sjunger på ett mörkt och vackert sätt.|She sings in a dark and beautiful way."],
+v:["ett band|a band","en låt|a song","en text|lyrics","en sångare|a singer","en melodi|a melody","en spellista|a playlist","ett album|an album","en konsert|a concert","en gitarr|a guitar","ett trumset|a drum kit","ett piano|a piano","en refräng|a chorus","en vers|a verse","ett tempo|a tempo","en genre|a genre","att spela in|to record","en artist|an artist","en känsla|a feeling"],
+q:["Vilken låt kan du lyssna på om och om igen?|Which song can you listen to over and over?","Hur hittar du ny musik?|How do you find new music?","Vilken stämning vill du ha i musiken? Varför?|What mood do you want in music? Why?"],
+w:["Jag brukar *lyssna* på indiemusik.|I usually listen to indie music.|i","Hon *sjöng* så vackert på konserten.|She sang so beautifully at the concert.|p","Bandet har *spelat* in ett nytt album.|The band has recorded a new album.|s"]},
+{t:"Sci-fi och fantasy",e:"Sci-fi and fantasy",
+p:["Jag älskar böcker som utspelar sig i andra världar.|I love books set in other worlds.","Världen är full av magi.|The world is full of magic.","Jag gillar berättelser om framtiden.|I like stories about the future."],
+v:["magi|magic","en drake|a dragon","ett rymdskepp|a spaceship","en robot|a robot","en planet|a planet","en hjälte|a hero","en skurk|a villain","en profetia|a prophecy","en utomjording|an alien","en tidsmaskin|a time machine","en dystopi|a dystopia","en rymdstation|a space station","en varulv|a werewolf","en jätte|a giant","en enhörning|a unicorn","ett kungarike|a kingdom","en förbannelse|a curse","en parallell värld|a parallel world"],
+q:["Vilken fantasyvärld skulle du vilja besöka?|Which fantasy world would you like to visit?","Tror du att människor kommer att bo på andra planeter?|Do you think people will live on other planets?","Vem är din favorithjälte eller favoritskurk?|Who is your favorite hero or villain?"],
+w:["Jag skulle vilja *flyga* i ett rymdskepp.|I would like to fly in a spaceship.|i","Jag *läste* hela boken på en dag.|I read the whole book in a day.|p","Jag har ofta *drömt* om andra planeter.|I have often dreamed about other planets.|s"]},
+{t:"Gotik och mörk stil",e:"Gothic and dark style",
+p:["Jag tycker om mörka färger.|I like dark colors.","Stilen är gotisk och lite mystisk.|The style is gothic and a little mysterious.","Jag älskar gamla slott och spöken.|I love old castles and ghosts."],
+v:["ett slott|a castle","ett spöke|a ghost","en vampyr|a vampire","mystisk|mysterious","svart|black","en kyrkogård|a graveyard","spöklik|eerie","en skugga|a shadow","en katedral|a cathedral","ett ljus|a candle","en kista|a coffin","en fladdermus|a bat","en korp|a raven","en hemlighet|a secret","ett hemsökt hus|a haunted house","spets|lace","en korsett|a corset","dyster|gloomy","tyst|quiet"],
+q:["Vad gillar du med den gotiska stilen?|What do you like about the gothic style?","Vilken mörk berättelse tycker du bäst om?|Which dark story do you like best?","Hur klär du dig när du vill sticka ut?|How do you dress when you want to stand out?"],
+w:["Jag gillar att *klä* mig i svart.|I like to dress in black.|i","Vi *tände* ljus i den gamla kyrkan.|We lit candles in the old church.|p","Jag har alltid *älskat* mörka berättelser.|I have always loved dark stories.|s"]},
+{t:"Mobilen och sociala medier",e:"Phone and social media",
+p:["Jag har för mycket skärmtid.|I have too much screen time.","Vi har regler för mobilen hemma.|We have rules for the phone at home.","Jag följer många skapare.|I follow many creators."],
+v:["en mobil|a phone","skärmtid|screen time","en app|an app","ett konto|an account","att följa|to follow","ett inlägg|a post","en regel|a rule","privat|private","ett meddelande|a message","en notis|a notification","ett lösenord|a password","ett filmklipp|a video clip","en följare|a follower","att scrolla|to scroll","att ladda ner|to download","ett batteri|a battery","beroende|addicted","att blockera|to block","en gräns|a limit"],
+q:["Vilka appar använder du mest?|Which apps do you use most?","Vad är en rimlig regel för mobilen?|What is a reasonable phone rule?","Vad är bra och dåligt med sociala medier?|What is good and bad about social media?"],
+w:["Jag försöker att inte *scrolla* för mycket.|I try not to scroll too much.|i","Igår *laddade* jag ner en ny app.|Yesterday I downloaded a new app.|p","Hon har *blockerat* kontot.|She has blocked the account.|s"]},
+{t:"Skolan och betyg",e:"School and grades",
+p:["Jag har prov på fredag.|I have a test on Friday.","Jag har svårt för matte.|I find math hard.","Vi jobbar i grupp i det här ämnet.|We work in groups in this subject."],
+v:["ett prov|a test","ett ämne|a subject","en uppgift|an assignment","ett betyg|a grade","en lärare|a teacher","att plugga|to study","stressad|stressed","en rast|a break","en läxa|homework","en lektion|a lesson","ett schema|a schedule","en presentation|a presentation","att lämna in|to hand in","att missa|to miss","en klass|a class","en skolbok|a textbook","duktig|skilled","en rektor|a principal","att förstå|to understand"],
+q:["Vilket ämne gillar du bäst? Varför?|Which subject do you like best? Why?","Hur brukar du plugga inför prov?|How do you usually study for tests?","Vad skulle göra skolan bättre?|What would make school better?"],
+w:["Jag måste *plugga* inför provet.|I have to study for the test.|i","Jag *lämnade* in uppgiften i tid.|I handed in the assignment on time.|p","Jag har *missat* bussen.|I have missed the bus.|s"]},
+{t:"Kompisar och relationer",e:"Friends and relationships",
+p:["Vi ska ses på lördag.|We are meeting on Saturday.","Jag känner mig utanför ibland.|I sometimes feel left out.","Jag tycker att hon är en bra kompis.|I think she is a good friend."],
+v:["en kompis|a friend","en bästis|a best friend","att ses|to meet up","ett missförstånd|a misunderstanding","att lita på|to trust","ärlig|honest","att be om ursäkt|to apologize","utanför|left out","en vän|a friend","att hänga|to hang out","ett bråk|an argument","att förlåta|to forgive","att skvallra|to gossip","ett förtroende|trust","snäll|kind","elak|mean","en gemenskap|togetherness","att stötta|to support","ensam|alone, lonely"],
+q:["Vad gör en bra kompis?|What makes a good friend?","Hur löser du ett missförstånd med en kompis?|How do you sort out a misunderstanding with a friend?","Vad gör ni när ni hänger tillsammans?|What do you do when you hang out?"],
+w:["Jag ska *träffa* mina kompisar på lördag.|I am going to meet my friends on Saturday.|i","Hon *förlät* mig direkt.|She forgave me right away.|p","Vi har aldrig *bråkat* om något stort.|We have never argued about anything big.|s"]},
+{t:"Framtiden",e:"The future",
+p:["Jag vill bli konstnär.|I want to become an artist.","Jag vet inte än vad jag vill göra.|I do not know yet what I want to do.","I framtiden vill jag bo utomlands.|In the future I want to live abroad."],
+v:["ett drömjobb|a dream job","gymnasiet|upper secondary school","en utbildning|an education","ett yrke|a profession","utomlands|abroad","en dröm|a dream","att välja|to choose","att söka|to apply","en karriär|a career","ett universitet|a university","en lön|a salary","att flytta|to move","en ansökan|an application","ett mål|a goal","en plan|a plan","en erfarenhet|an experience","att våga|to dare","ett sommarjobb|a summer job","att utvecklas|to grow, develop"],
+q:["Vilket yrke skulle du vilja testa i en vecka?|Which job would you like to try for a week?","Var vill du bo när du är vuxen?|Where do you want to live as an adult?","Vad ser du mest fram emot?|What are you looking forward to most?"],
+w:["Jag ska *välja* gymnasium nästa år.|I will choose upper secondary school next year.|i","Jag *sökte* till konstskolan.|I applied to art school.|p","Jag har aldrig *vågat* flyga ensam.|I have never dared to fly alone.|s"]},
+{t:"Skapa egna världar",e:"Creating your own worlds",
+p:["Jag skriver en berättelse om en drakryttare.|I am writing a story about a dragon rider.","Min värld har en egen karta.|My world has its own map.","Vad heter landet i din berättelse?|What is the country in your story called?"],
+v:["en berättelse|a story","en karta|a map","ett land|a country","en huvudperson|a main character","en handling|a plot","ett språk|a language","att skriva|to write","att hitta på|to make up","en biroll|a supporting character","en miljö|a setting","en stad|a city","ett folk|a people","en religion|a religion","en kultur|a culture","ett namn|a name","att skapa|to create","en legend|a legend","en detalj|a detail","en fantasi|an imagination"],
+q:["Om du skapade en egen värld, hur skulle den se ut?|If you created your own world, what would it look like?","Vilka regler har magin i din värld?|What are the rules of magic in your world?","Vem är huvudpersonen i din berättelse?|Who is the main character in your story?"],
+w:["Jag vill *skriva* en bok om en drake.|I want to write a book about a dragon.|i","Jag *skapade* ett helt nytt land.|I created a whole new country.|p","Jag har *hittat* på ett magiskt språk.|I have made up a magical language.|s"]},
+{t:"Hobbyer och fritid",e:"Hobbies and free time",
+p:["Vad gör du på fritiden?|What do you do in your free time?","Jag ritar mest på kvällarna.|I mostly draw in the evenings.","Ska vi hitta på något i helgen?|Shall we do something this weekend?"],
+v:["fritid|free time","en hobby|a hobby","en kväll|an evening","en helg|a weekend","att umgås|to hang out","ett brädspel|a board game","att vila|to rest","att pyssla|to craft","att teckna|to draw","att sy|to sew","att baka|to bake","ett kortspel|a card game","en promenad|a walk","att fika|to have coffee and a snack","att streama|to stream","att samla|to collect","en klubb|a club","att öva|to practice","tråkig|boring","rolig|fun"],
+q:["Hur ser en perfekt helg ut för dig?|What does a perfect weekend look like for you?","Vilken hobby skulle du vilja lära dig?|Which hobby would you like to learn?","Vad gör du när du vill varva ner?|What do you do when you want to wind down?"],
+w:["Jag vill *teckna* mer under sommaren.|I want to draw more during the summer.|i","Vi *bakade* kakor i helgen.|We baked cookies at the weekend.|p","Jag har *samlat* på klistermärken i flera år.|I have collected stickers for several years.|s"]},
+{t:"Familjen och hemmet",e:"Family and home",
+p:["Vi bråkar ibland om småsaker.|We sometimes argue about small things.","Jag hjälper till hemma.|I help out at home.","Min familj äter middag tillsammans.|My family eats dinner together."],
+v:["en förälder|a parent","ett syskon|a sibling","en släkting|a relative","en kusin|a cousin","en mormor|a maternal grandmother","en farfar|a paternal grandfather","en syssla|a chore","att diska|to wash dishes"],
+q:["Vilka sysslor har du hemma?|What chores do you have at home?","Vad gör din familj tillsammans som ni tycker om?|What does your family do together that you enjoy?","Vad är viktigt för dig i en familj?|What is important to you in a family?"],
+w:["Det är min tur att *diska*.|It is my turn to wash the dishes.|i","Jag *hjälpte* mamma i köket.|I helped mom in the kitchen.|p","Jag har redan *städat* mitt rum.|I have already cleaned my room.|s"]},
+{t:"Mat och fika",e:"Food and fika",
+p:["Jag är sugen på något gott.|I am craving something tasty.","Kan vi laga middag tillsammans?|Can we cook dinner together?","Det där ser gott ut!|That looks tasty!"],
+v:["ett recept|a recipe","en ingrediens|an ingredient","att laga mat|to cook","en ugn|an oven","en fika|a coffee break with a snack","snabbmat|fast food","en efterrätt|a dessert","kryddig|spicy"],
+q:["Vilken rätt kan du laga själv?|Which dish can you cook yourself?","Vad är din favoritfika?|What is your favorite fika?","Vilken mat från ett annat land vill du prova?|Which food from another country do you want to try?"],
+w:["Jag vill *laga* middag ikväll.|I want to cook dinner tonight.|i","Vi *åt* kanelbullar till fikan.|We ate cinnamon buns for fika.|p","Har du *provat* den nya restaurangen?|Have you tried the new restaurant?|s"]},
+{t:"Kläder och stil",e:"Clothes and style",
+p:["Jag gillar att klä mig på mitt eget sätt.|I like to dress in my own way.","Den där jackan passar dig.|That jacket suits you.","Jag köper mest second hand.|I mostly buy second hand."],
+v:["kläder|clothes","en jacka|a jacket","en tröja|a sweater","byxor|pants","skor|shoes","ett smycke|a piece of jewelry","en secondhandbutik|a second-hand store","att prova|to try on"],
+q:["Vad säger din stil om dig?|What does your style say about you?","Var köper du helst kläder? Varför?|Where do you prefer to buy clothes? Why?","Är det viktigt att följa modet? Varför?|Is it important to follow fashion? Why?"],
+w:["Jag vill *köpa* en svart jacka.|I want to buy a black jacket.|i","Tröjan *passade* perfekt.|The sweater fit perfectly.|p","Jag har *bytt* stil flera gånger.|I have changed style several times.|s"]},
+{t:"Resor och semester",e:"Travel and vacation",
+p:["Jag vill åka till Japan någon gång.|I want to go to Japan someday.","Vi reste med tåg förra sommaren.|We traveled by train last summer.","Jag har aldrig varit i Italien.|I have never been to Italy."],
+v:["en resa|a trip","en semester|a vacation","ett flyg|a flight","ett tåg|a train","ett pass|a passport","en resväska|a suitcase","ett hotell|a hotel","en sevärdhet|a sight, attraction"],
+q:["Vart vill du resa om du fick välja?|Where do you want to travel if you could choose?","Vad packar du alltid i väskan?|What do you always pack in your bag?","Är det bättre att resa ensam eller med andra? Varför?|Is it better to travel alone or with others? Why?"],
+w:["Jag drömmer om att *resa* till Japan.|I dream of traveling to Japan.|i","Vi *bokade* hotellet igår.|We booked the hotel yesterday.|p","Har du *packat* passet?|Have you packed your passport?|s"]},
+{t:"Anime och manga",e:"Anime and manga",
+p:["Jag har sett alla avsnitt.|I have seen every episode.","Berättelsen tog en oväntad vändning.|The story took an unexpected turn.","Jag läser hellre manga än ser på tv.|I would rather read manga than watch TV.","Vilken karaktär är din favorit?|Which character is your favorite?"],
+v:["en anime|an anime","en manga|a manga","en säsong|a season","en hjältinna|a heroine","en rival|a rival","en förvandling|a transformation","en kraft|a power","en superkraft|a superpower","en teckenstil|a drawing style","en dubbning|a dub","en cliffhanger|a cliffhanger","ett slut|an ending","en fanfiktion|fan fiction","ett universum|a universe"],
+q:["Vad gör en bra anime-karaktär?|What makes a good anime character?","Föredrar du dubbning eller undertexter? Varför?|Do you prefer dubbing or subtitles? Why?","Vilket slut har överraskat dig mest?|Which ending surprised you most?"],
+w:["Jag vill *läsa* hela mangan på svenska.|I want to read the whole manga in Swedish.|i","Jag *grät* när hjälten dog.|I cried when the hero died.|p","Jag har *följt* den serien i flera år.|I have followed that series for several years.|s"]},
+{t:"Cosplay och mässor",e:"Cosplay and conventions",
+p:["Jag har sytt min kostym själv.|I sewed my costume myself.","Kan jag ta ett kort på dig?|Can I take a photo of you?","Det var jättemånga människor på mässan.|There were so many people at the convention.","Vilken karaktär är du klädd som?|Which character are you dressed as?"],
+v:["en cosplayare|a cosplayer","en rekvisita|a prop","en utställare|an exhibitor","en kö|a queue","en autograf|an autograph","en tävling|a competition","en panel|a panel","en fotografering|a photo shoot","ett hantverk|a craft","smink|makeup","sömnad|sewing","skumgummi|foam rubber","en varelse|a creature","en samling|a collection"],
+q:["Vilken karaktär skulle du vilja klä ut dig till? Varför?|Which character would you like to dress up as? Why?","Vad är svårast med att göra en egen kostym?|What is hardest about making your own costume?","Vad skulle du vilja köpa eller se på en mässa?|What would you like to buy or see at a convention?"],
+w:["Jag vill *sy* en egen kostym.|I want to sew my own costume.|i","Vi *stod* i kö i två timmar.|We stood in line for two hours.|p","Jag har aldrig *tävlat* i cosplay.|I have never competed in cosplay.|s"]},
+{t:"Politik och demokrati",e:"Politics and democracy",
+p:["Alla borde ha rätt att säga sin åsikt.|Everyone should have the right to say their opinion.","Jag tycker att det är orättvist.|I think that is unfair.","Vem har rätt att bestämma det?|Who has the right to decide that?","Jag är inte säker, men jag tror att ...|I am not sure, but I think that ..."],
+v:["en demokrati|a democracy","ett parti|a party","en valkampanj|an election campaign","en politiker|a politician","riksdagen|the parliament","en rättighet|a right","en skyldighet|an obligation","yttrandefrihet|freedom of speech","en majoritet|a majority","en minoritet|a minority","ett förslag|a proposal","en skatt|a tax","rösträtt|the right to vote","jämlikhet|equality"],
+q:["Vad är det viktigaste en politiker kan göra?|What is the most important thing a politician can do?","Borde alla vara skyldiga att rösta? Varför?|Should everyone be required to vote? Why?","Hur kan unga påverka politiken?|How can young people influence politics?"],
+w:["Jag vill *debattera* med någon som tycker annorlunda.|I want to debate with someone who thinks differently.|i","Klassen *diskuterade* valet igår.|The class discussed the election yesterday.|p","Riksdagen har *röstat* om förslaget.|Parliament has voted on the proposal.|s"]},
+{t:"Digital konst och teckning",e:"Digital art and drawing",
+p:["Jag ritar på min surfplatta.|I draw on my tablet.","Skissen blev bättre än jag trodde.|The sketch turned out better than I thought.","Kan du ge mig feedback på min bild?|Can you give me feedback on my picture?","Jag övar på att rita händer.|I am practicing drawing hands."],
+v:["en surfplatta|a tablet","ett ritprogram|a drawing program","ett lager|a layer","en linje|a line","skuggning|shading","ett perspektiv|a perspective","en proportion|a proportion","en färgpalett|a color palette","en kontrast|a contrast","en bakgrund|a background","en referensbild|a reference image","en signatur|a signature","att sudda|to erase","att skissa|to sketch"],
+q:["Vilket verktyg tycker du bäst om att rita med?|Which tool do you like best for drawing?","Vad är det svåraste att lära sig när man ritar?|What is hardest to learn when drawing?","Hur lägger du upp dina bilder online?|How do you post your pictures online?"],
+w:["Jag vill *skissa* en ny karaktär.|I want to sketch a new character.|i","Jag *suddade* ut hela bakgrunden.|I erased the whole background.|p","Jag har *övat* på perspektiv hela veckan.|I have practiced perspective all week.|s"]},
+{t:"Klimat och natur",e:"Climate and nature",
+p:["Isarna smälter för fort.|The ice is melting too fast.","Jag försöker äta mindre kött.|I try to eat less meat.","Alla kan göra något litet.|Everyone can do something small.","Naturen är viktig för mig.|Nature is important to me."],
+v:["en klimatförändring|a climate change","global uppvärmning|global warming","fossila bränslen|fossil fuels","vindkraft|wind power","solenergi|solar energy","biologisk mångfald|biodiversity","en art|a species","utrotningshotad|endangered","en torka|a drought","en översvämning|a flood","avfall|waste","en cykel|a bicycle","att spara energi|to save energy","att smälta|to melt"],
+q:["Vad oroar dig mest när det gäller klimatet?|What worries you most about the climate?","Vilken vana skulle du kunna ändra för miljön?|Which habit could you change for the environment?","Vilket djur eller vilken natur vill du skydda mest?|Which animal or nature do you most want to protect?"],
+w:["Vi måste *spara* mer energi.|We have to save more energy.|i","Isen *smälte* snabbt i somras.|The ice melted quickly last summer.|p","Jag har *cyklat* till skolan hela året.|I have cycled to school all year.|s"]}],
+adult:[
+{t:"Skolan och föräldrakontakt",e:"School and parent contact",
+p:["Jag skulle vilja boka ett utvecklingssamtal.|I would like to book a parent-teacher conference.","Min dotter var sjuk igår.|My daughter was sick yesterday.","Hur går det för henne i skolan?|How is she doing in school?","Kan ni skicka mer information?|Could you send more information?","Vi behöver prata om hennes schema.|We need to talk about her schedule."],
+v:["ett utvecklingssamtal|a parent-teacher conference","en lärare|a teacher","frånvaro|absence","en läxa|homework","ett betyg|a grade","en vårdnadshavare|a guardian","ett meddelande|a message","att anmäla|to report","en mentor|a mentor","en rektor|a principal","ett föräldramöte|a parents' meeting","ett schema|a schedule","en lektion|a lesson","en skolsköterska|a school nurse","ett stöd|support","en kurator|a school counselor","elevhälsan|student health services","att följa upp|to follow up","en kontakt|a contact"],
+q:["Vad går bra för ditt barn i skolan?|What is going well for your child at school?","Vad tycker du att skolan borde göra annorlunda?|What do you think the school should do differently?","Hur kan föräldrar och lärare samarbeta bättre?|How can parents and teachers cooperate better?","Hur ofta vill du ha kontakt med skolan?|How often do you want contact with the school?"],
+w:["Jag vill *boka* ett utvecklingssamtal.|I want to book a parent-teacher conference.|i","Läraren *ringde* mig i förra veckan.|The teacher called me last week.|p","Skolan har *följt* upp frånvaron.|The school has followed up on the absence.|s"]},
+{t:"Jobb och arbetsliv",e:"Work life",
+p:["Jag arbetar som ...|I work as ...","Vad gör du på jobbet?|What do you do at work?","Jag har ett möte klockan tio.|I have a meeting at ten.","Kan vi skjuta upp mötet?|Can we postpone the meeting?","Jag arbetar deltid.|I work part time."],
+v:["en arbetsplats|a workplace","en kollega|a colleague","ett möte|a meeting","en chef|a boss","en arbetsuppgift|a task","en tidsfrist|a deadline","att samarbeta|to collaborate","en anställning|an employment","heltid|full time","deltid|part time","en lön|a salary","en anställd|an employee","en arbetsgivare|an employer","ett avtal|a contract","en semester|a vacation","en uppgift|an assignment","en presentation|a presentation","en rapport|a report","en tidsplan|a timeline","att prioritera|to prioritize"],
+q:["Vad gillar du mest med ditt jobb?|What do you like most about your job?","Hur ser en vanlig arbetsdag ut för dig?|What does a normal workday look like for you?","Vad är skillnaden mellan att arbeta i Sverige och i USA?|What is the difference between working in Sweden and in the US?","Hur balanserar du jobb och fritid?|How do you balance work and free time?"],
+w:["Jag ska *arbeta* hemifrån på fredag.|I am going to work from home on Friday.|i","Vi *hade* ett långt möte igår.|We had a long meeting yesterday.|p","Teamet har *samarbetat* bra hela hösten.|The team has cooperated well all autumn.|s"]},
+{t:"Vård och apotek",e:"Healthcare and pharmacy",
+p:["Jag behöver boka en tid.|I need to book an appointment.","Jag har haft ont i huvudet i tre dagar.|I have had a headache for three days.","Har ni något mot förkylning?|Do you have anything for a cold?","Jag ringer 1177.|I am calling 1177.","Kan jag få ett intyg?|Can I get a certificate?"],
+v:["en vårdcentral|a health center","ett apotek|a pharmacy","ett recept|a prescription","feber|fever","ont i halsen|a sore throat","en tid|an appointment","en läkare|a doctor","symtom|symptoms","ett intyg|a certificate","en remiss|a referral","en sjuksköterska|a nurse","en tandläkare|a dentist","en tablett|a pill","en salva|an ointment","hosta|a cough","en förkylning|a cold","ont i magen|a stomach ache","en biverkning|a side effect","en dos|a dose","en vaccination|a vaccination","att återhämta sig|to recover"],
+q:["Hur bokar man en läkartid i Sverige?|How do you book a doctor's appointment in Sweden?","Vad gör du när du är förkyld?|What do you do when you have a cold?","Hur skiljer sig vården här från vården i USA?|How is healthcare here different from the US?","När går du till läkaren och när väntar du?|When do you go to the doctor and when do you wait?"],
+w:["Jag vill *må* bättre snart.|I want to feel better soon.|i","Jag *fick* en tid hos läkaren.|I got an appointment with the doctor.|p","Han har *återhämtat* sig efter förkylningen.|He has recovered after the cold.|s"]},
+{t:"Samhälle och åsikter",e:"Society and opinions",
+p:["Enligt min åsikt ...|In my opinion ...","Jag håller inte med, eftersom ...|I disagree, because ...","Det beror på.|It depends.","Ett argument för det är att ...|One argument for it is that ...","Jag ser båda sidorna.|I see both sides."],
+v:["en åsikt|an opinion","ett argument|an argument","en fördel|an advantage","en nackdel|a disadvantage","samhället|society","en debatt|a debate","dessutom|besides","däremot|on the other hand","en fråga|an issue, question","en lösning|a solution","ett problem|a problem","en konsekvens|a consequence","en förändring|a change","en risk|a risk","en möjlighet|an opportunity","en diskussion|a discussion","att övertyga|to convince","att jämföra|to compare","eftersom|because","trots att|even though"],
+q:["Vilka är fördelarna och nackdelarna med sociala medier?|What are the pros and cons of social media?","Borde skolan börja senare på morgonen? Varför?|Should school start later in the morning? Why?","Vad är viktigast för att må bra i vardagen?|What matters most for feeling good in everyday life?","Vad skulle du ändra i samhället om du kunde?|What would you change in society if you could?"],
+w:["Det är svårt att *tycka* något om den frågan.|It is hard to have an opinion on that issue.|i","Hon *övertygade* mig med sina argument.|She convinced me with her arguments.|p","Jag har *jämfört* de två förslagen.|I have compared the two proposals.|s"]},
+{t:"Bostad och grannar",e:"Housing and neighbors",
+p:["Vi bor i en hyresrätt.|We live in a rental apartment.","Kan jag boka tvättstugan på lördag?|Can I book the laundry room on Saturday?","Det är ljud från lägenheten ovanför.|There is noise from the apartment above.","Kan ni laga det så fort som möjligt?|Can you fix it as soon as possible?"],
+v:["en hyresrätt|a rental apartment","en bostadsrätt|a co-op apartment","en granne|a neighbor","en tvättstuga|a laundry room","en förening|an association","hyra|rent","en fastighetsskötare|a caretaker","ett fel|a fault, problem","en nyckel|a key","ett kontrakt|a contract","en hyresvärd|a landlord","en trappuppgång|a stairwell","en balkong|a balcony","en källare|a basement","sopsortering|waste sorting","el|electricity","värme|heat","ett läckage|a leak","att flytta in|to move in","att flytta ut|to move out"],
+q:["Hur är det att bo i lägenhet i Sverige?|What is it like living in an apartment in Sweden?","Vad gör du om grannen är högljudd?|What do you do if a neighbor is loud?","Vad är viktigast i ett bra område?|What matters most in a good neighborhood?","Vad är viktigast när du väljer bostad?|What matters most when you choose a home?"],
+w:["Vi vill *bo* nära tunnelbanan.|We want to live near the subway.|i","Vi *hyrde* lägenheten i två år.|We rented the apartment for two years.|p","Grannen har *flyttat* till Göteborg.|The neighbor has moved to Gothenburg.|s"]},
+{t:"Mat och handla",e:"Food and shopping",
+p:["Var hittar jag mjölken?|Where do I find the milk?","Jag behöver en påse, tack.|I need a bag, please.","Vad kostar det här?|How much does this cost?","Var ligger kassan?|Where is the checkout?"],
+v:["en mataffär|a grocery store","en kassa|a checkout","ett kvitto|a receipt","ett erbjudande|an offer","en varukorg|a shopping basket","färsk|fresh","en ingrediens|an ingredient","att betala|to pay","en kundvagn|a shopping cart","en påse|a bag","pant|bottle deposit","ett pris|a price","en rea|a sale","fryst|frozen","en kyl|a fridge","ett kilo|a kilo","en burk|a can, jar","en förpackning|a package","en mängd|an amount"],
+q:["Vilken affär handlar du oftast i? Varför?|Which store do you shop at most? Why?","Vad lagar du när du inte har tid?|What do you cook when you have no time?","Vilken svensk mat har du lärt dig tycka om?|Which Swedish food have you learned to like?","Hur planerar du veckans matinköp?|How do you plan the week's grocery shopping?"],
+w:["Jag ska *handla* mat efter jobbet.|I am going to buy groceries after work.|i","Jag *betalade* med kort.|I paid by card.|p","Vi har *köpt* för mycket mjölk.|We have bought too much milk.|s"]},
+{t:"Resor och kollektivtrafik",e:"Travel and public transport",
+p:["När går nästa tåg?|When does the next train leave?","Var kan jag köpa en biljett?|Where can I buy a ticket?","Bussen är försenad.|The bus is delayed.","Jag har glömt mitt resekort.|I forgot my travel card."],
+v:["en biljett|a ticket","en hållplats|a stop","en tunnelbana|a subway","ett pendeltåg|a commuter train","en tidtabell|a timetable","försenad|delayed","en avgång|a departure","att byta|to change (trains)","ett resekort|a travel card","en buss|a bus","en spårvagn|a tram","en färja|a ferry","en tågstation|a train station","ett spår|a platform, track","en rutt|a route","en resenär|a traveler","rusningstid|rush hour","en sträcka|a distance","att stiga av|to get off","att stiga på|to get on"],
+q:["Hur tar du dig till jobbet?|How do you get to work?","Vad tycker du om kollektivtrafiken i Sverige?|What do you think of public transport in Sweden?","Vart vill du resa på nästa semester?|Where do you want to travel on your next vacation?","Vad gör du när ditt tåg är inställt?|What do you do when your train is cancelled?"],
+w:["Du måste *byta* tåg i Uppsala.|You have to change trains in Uppsala.|i","Vi *väntade* på bussen i tjugo minuter.|We waited for the bus for twenty minutes.|p","Jag har precis *stigit* på tåget.|I have just gotten on the train.|s"]},
+{t:"Traditioner och högtider",e:"Traditions and holidays",
+p:["Vi firar midsommar med dans och mat.|We celebrate midsummer with dancing and food.","Har ni några traditioner i er familj?|Do you have any traditions in your family?","Jag har aldrig firat lucia förut.|I have never celebrated Lucia before.","Vi tänder ljus i adventstid.|We light candles at Advent."],
+v:["en tradition|a tradition","en högtid|a holiday, festival","midsommar|midsummer","jul|Christmas","påsk|Easter","lucia|Lucia","ett julbord|a Christmas buffet","en kräftskiva|a crayfish party","advent|Advent","nyår|New Year","en semla|a semla, cream bun","en midsommarstång|a maypole","en dans|a dance","en sång|a song","ett firande|a celebration","en present|a gift","en gäst|a guest","en bjudning|a party","att fira|to celebrate","att bjuda|to invite"],
+q:["Vilken svensk högtid gillar du bäst?|Which Swedish holiday do you like best?","Vad är skillnaden mellan svenska och amerikanska traditioner?|What is the difference between Swedish and American traditions?","Vilka traditioner är viktiga för din familj?|Which traditions are important to your family?","Vad skulle du vilja lära dina barn om högtider?|What would you like to teach your children about holidays?"],
+w:["Vi vill *fira* midsommar tillsammans.|We want to celebrate midsummer together.|i","De *bjöd* oss på julbord.|They invited us to a Christmas buffet.|p","Vi har *sjungit* julsånger hela kvällen.|We have sung Christmas songs all evening.|s"]}]
+};
+const L={kid:"Barn",teen:"Tonåring",adult:"Vuxen"};
+let age="teen",ti=0,en=true;
+try{age=localStorage.getItem("age")||age;en=localStorage.getItem("en")!=="0"}catch(e){}
+if(!D[age])age="teen";
+const $=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem("age",age);localStorage.setItem("en",en?"1":"0")}catch(e){}};
+const s2=s=>{const[a,b]=s.split("|");return[a,en?`<small>${b}</small>`:""]};
+const TG={i:"Infinitiv",p:"Preteritum",s:"Supinum"};
+const vb=t=>t.w?`<h3>Verb i meningar</h3><ul>${t.w.map(x=>{const[a,b,c]=x.split("|");return`<li><span class="tg">${TG[c]}</span>${a.replace(/\*(.+?)\*/g,"<b>$1</b>")}${en?`<small>${b.replace(/\*/g,"")}</small>`:""}</li>`}).join("")}</ul>`:"";
+function render(){
+ document.body.dataset.age=age;
+ $("ages").innerHTML=Object.keys(L).map(k=>`<button data-a="${k}" aria-pressed="${k==age}">${L[k]}</button>`).join("");
+ $("tp").innerHTML=D[age].map((t,i)=>`<option value="${i}"${i==ti?" selected":""}>${t.t}</option>`).join("");
+ $("en").setAttribute("aria-pressed",en);
+ const t=D[age][ti];
+ $("out").innerHTML=`<div class="card"><h2>${t.t}</h2>${en?`<small>${t.e}</small>`:""}
+ <h3>Fraser</h3><ul>${t.p.map(x=>{const[a,b]=s2(x);return`<li>${a}${b}</li>`}).join("")}</ul>
+ <h3>Ord</h3><div class="chips">${t.v.map(x=>{const[a,b]=s2(x);return`<span>${a}${b}</span>`}).join("")}</div>
+ ${vb(t)}<h3>Frågor</h3>${t.q.map((x,i)=>{const[a,b]=s2(x);return`<div class="b ${i%2?"z":"a"}"><b>Person ${i%2?"B":"A"}</b>${a}${b}</div>`}).join("")}</div>`;
+}
+$("ages").onclick=e=>{const k=e.target.dataset.a;if(k){age=k;ti=0;$("rq").hidden=true;save();render()}};
+$("tp").onchange=e=>{ti=+e.target.value;render()};
+$("rt").onclick=()=>{const n=D[age].length;let i=ti;while(n>1&&i==ti)i=Math.random()*n|0;ti=i;render()};
+$("en").onclick=()=>{en=!en;save();render()};
+$("rb").onclick=()=>{const all=D[age].flatMap(t=>t.q);const[a,b]=s2(all[Math.random()*all.length|0]);const r=$("rq");r.hidden=false;r.innerHTML=`<h3 style="margin-top:0">Fråga</h3>${a}${b}`};
+render();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
